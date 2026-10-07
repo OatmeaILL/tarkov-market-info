@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Tarkov 市场排行生成器 —— 图形界面入口。
+"""塔科夫市场 —— 图形界面入口。
 
 界面风格取自 MaiBill（小睦记账）的「褪色薄荷」设计系统：
 浅灰绿底 + 白卡片 + 薄荷绿主色，圆角、留白、说话直白。
@@ -33,10 +33,11 @@ import sync
 import theme as theme_module
 import widgets
 
-APP_NAME = "Tarkov 市场排行生成器"
-# 1.4 = 修两处搜索/排序缺陷：搜配件时配件不再被扣分（wants_part 之前是死变量）；
-#       48h涨跌榜的涨栏/跌栏按符号分开过滤，不再互相串
-APP_VERSION = "1.4"
+APP_NAME = "塔科夫市场"
+# 1.5 = 程序改名「塔科夫市场」（exe 文件名仍是 TarkovMarketInfo，改名会破坏
+#       已有配置路径和 User-Agent 标识）；换头像图标；
+#       加未捕获异常的兜底日志，不再出现"闪退但什么日志都没有"
+APP_VERSION = "1.5"
 
 # 作者与开源地址，设置窗口的「关于」卡片显示这个
 AUTHOR = "OatmeaILL"
@@ -1758,8 +1759,9 @@ def self_test(limit=10):
     passed = True
     temp_dir = ""
 
-    lines.append("Tarkov 市场排行生成器 自检")
+    lines.append(APP_NAME + " 自检")
     lines.append("时间：" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    lines.append("版本：v" + APP_VERSION)
     lines.append("打包运行：" + ("是" if getattr(sys, "frozen", False) else "否"))
     # 打包后程序目录 = exe 所在目录；源码运行时 exe 是 python.exe，
     # 直接报 sys.executable 会指向 C:\Python314，得用 app_dir()
@@ -2052,7 +2054,7 @@ def run_sync_cli(mode):
     result_path = os.path.join(tempfile.gettempdir(), "tarkov_sync.txt")
     passed = True
 
-    lines.append("Tarkov 市场排行生成器 命令行同步")
+    lines.append(APP_NAME + " 命令行同步")
     lines.append("时间：" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     lines.append("打包运行：" + ("是" if getattr(sys, "frozen", False) else "否"))
     lines.append("模式：" + mode)
@@ -2266,7 +2268,41 @@ def take_ui_screenshot(path, force_dark=None):
     return 0
 
 
+def _crash_handler(error_type, error_value, error_traceback):
+    """未捕获异常的最后一道兜底：写日志 + 弹窗告诉用户出事了。
+
+    打包成 --windowed 之后没有控制台，Python 默认会把 traceback 往 stderr 一写了事，
+    而 stderr 根本没人看 —— 结果就是双击一下窗口一闪就没了，日志里也什么都没有，
+    跟"闪退"完全无法区分。所以这里必须自己留痕。
+
+    写日志用最笨的 open()+write()，不能碰其它模块：此刻程序状态不明，
+    别的模块自己都可能正在抛异常。
+    """
+    details = "".join(traceback.format_exception(error_type, error_value, error_traceback))
+    try:
+        data.ensure_dirs()
+        with open(data.error_log_path(), "a", encoding="utf-8") as handle:
+            handle.write("\n===== " + time.strftime("%Y-%m-%d %H:%M:%S") + " 崩溃 =====\n")
+            handle.write(details + "\n")
+    except Exception:
+        # 连日志都写不了就放弃，别在错误处理里再抛一次
+        pass
+
+    # 弹窗告诉用户去哪儿看日志，否则他只会看到"闪退"两个字
+    try:
+        messagebox.showerror(
+            "程序出错了",
+            "刚才发生了未处理的错误，已经记到日志里：\n\n"
+            + data.error_log_path()
+            + "\n\n把那个文件发出去，就能定位到原因。",
+        )
+    except Exception:
+        pass
+
+
 def main():
+    sys.excepthook = _crash_handler
+
     # 必须在建 Tk 根窗口之前声明，否则高 DPI 屏幕上窗口会被系统拉伸变糊
     theme_module.enable_dpi_awareness()
 

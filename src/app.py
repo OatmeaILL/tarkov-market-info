@@ -295,7 +295,7 @@ class SettingsWindow:
         about_row = tk.Frame(ainner, bg=colors["surface"])
         about_row.pack(fill="x")
         tk.Label(
-            about_row, text="TarkovMarketInfo  v" + main.APP_VERSION,
+            about_row, text=main.APP_NAME + "  v" + main.APP_VERSION,
             bg=colors["surface"], fg=colors["ink"],
             font=theme.fonts.body, anchor="w",
         ).pack(side="left")
