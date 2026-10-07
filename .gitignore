@@ -1,0 +1,46 @@
+# ---------- 桌面端运行时产物（不进仓库）----------
+# exe 是构建出来的，21MB
+*.exe
+# 物品库和历史缓存：用户自己的数据，每个人的价格库都不一样
+data/
+# 约 5300 张图标，27MB，从 icon.zip 解出来的
+icon/
+# 生成的 HTML / PNG / CSV 报表
+reports/
+# 图标包原件 16MB
+assets/*.zip
+
+# ---------- Android 构建产物 ----------
+Android/.gradle/
+Android/build/
+Android/app/build/
+# 机器相关的 SDK 路径（各人环境不同，别进仓库）
+Android/local.properties
+Android/.idea/
+Android/captures/
+*.apk
+*.aab
+*.iml
+
+# ---------- 打包中间产物 ----------
+build/
+dist/
+__pycache__/
+*.pyc
+*.pyo
+
+# ---------- 编辑器 / 系统 ----------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 临时 ----------
+*.log
+*.tmp
+*.bak
+.trae/
+
+# 参考资料，不是本项目产物（保留在本地，别传上仓库）
+TarkovScout_逻辑框架总结.md

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 底色对齐桌面端主窗口底色，Compose 首帧前不闪白 -->
+    <color name="app_bg">#F4F7F5</color>
+</resources>

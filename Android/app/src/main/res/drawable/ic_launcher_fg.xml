@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!--
+        自适应图标前景层。
+        安全区是中心72x72（108 的三分之二），超出部分会被各家桌面裁成圆形/方形，
+        所以主体图形全部压在 18~90 之间。
+        图形含义：三根柱子 + 一条上扬折线 = 行情。
+    -->
+    <!-- 左柱（矮） -->
+    <path
+        android:fillColor="#7FD3B4"
+        android:pathData="M32,66 L42,66 L42,80 L32,80 Z" />
+    <!-- 中柱（中） -->
+    <path
+        android:fillColor="#4FBE99"
+        android:pathData="M49,54 L59,54 L59,80 L49,80 Z" />
+    <!-- 右柱（高） -->
+    <path
+        android:fillColor="#2E9C74"
+        android:pathData="M66,40 L76,40 L76,80 L66,80 Z" />
+    <!-- 上扬折线 -->
+    <path
+        android:strokeColor="#F2C14E"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M30,50 L46,40 L62,30 L78,24" />
+    <!-- 折线末端的箭头点 -->
+    <path
+        android:fillColor="#F2C14E"
+        android:pathData="M78,18 L86,24 L78,30 Z" />
+</vector>

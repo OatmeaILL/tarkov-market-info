@@ -1,0 +1,16 @@
+# Android SDK 路径模板。
+#
+# 这个文件不该进仓库（各人机器路径不同），本仓库的 local.properties 已被
+# .gitignore 排除。克隆后自己拷一份改名成 local.properties 再改成你的路径：
+#
+#   cp local.properties.example local.properties
+#
+# 注意路径里的反斜杠要写两个，或者直接用正斜杠。
+
+# Windows 示例：
+# sdk.dir=E:\\Android\\Sdk
+# sdk.dir=E:/Programming/xioamaipian/MaiBill/build-env/android-sdk
+
+# macOS / Linux 示例：
+# sdk.dir=/Users/you/Library/Android/sdk
+# sdk.dir=/home/you/Android/Sdk
