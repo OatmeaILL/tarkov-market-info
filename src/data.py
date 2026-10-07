@@ -55,6 +55,11 @@ def top_movers(items, wanted_up, wanted_down, count=MOVERS_COUNT):
     """48h 涨跌榜：从能上跳蚤、且有价格的物品里取涨跌幅前后各 count 名。
 
     返回 (涨得最多, 跌得最多)；没勾选的那一侧给 None。
+
+    ⚠️ 涨和跌必须**分开过滤**，不能只靠排序取首尾。
+    之前只过滤了"涨跌幅非零"就 pool.sort + pool[:count] / pool[-count:]，
+    实测只勾"涨"时，pool 里跌 40% 的item 也会被 pool[:count] 取进"涨"那栏
+    （跌得多的排前面，count 一大就整栏都是跌的）。
     """
     if not wanted_up and not wanted_down:
         return None, None
@@ -63,9 +68,19 @@ def top_movers(items, wanted_up, wanted_down, count=MOVERS_COUNT):
         item for item in items
         if item["flea_enabled"] == 1 and item["avg24h"] > 0 and item["change48h_pct"]
     ]
-    pool.sort(key=operator.itemgetter("change48h_pct"), reverse=True)
-    up = pool[:count] if wanted_up else None
-    down = pool[-count:][::-1] if wanted_down else None
+
+    up = None
+    if wanted_up:
+        rising = [item for item in pool if item["change48h_pct"] > 0]
+        rising.sort(key=operator.itemgetter("change48h_pct"), reverse=True)
+        up = rising[:count]
+
+    down = None
+    if wanted_down:
+        falling = [item for item in pool if item["change48h_pct"] < 0]
+        falling.sort(key=operator.itemgetter("change48h_pct"))
+        down = falling[:count]
+
     return up, down
 
 

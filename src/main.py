@@ -34,9 +34,9 @@ import theme as theme_module
 import widgets
 
 APP_NAME = "Tarkov 市场排行生成器"
-# 1.3 = 运行时文件收进 data\ / icon\ / reports\ 三个子目录；
-#       查价输入满 2 字自动检索（180ms 防抖）+ 上下键选候选；设置里加「关于」
-APP_VERSION = "1.3"
+# 1.4 = 修两处搜索/排序缺陷：搜配件时配件不再被扣分（wants_part 之前是死变量）；
+#       48h涨跌榜的涨栏/跌栏按符号分开过滤，不再互相串
+APP_VERSION = "1.4"
 
 # 作者与开源地址，设置窗口的「关于」卡片显示这个
 AUTHOR = "OatmeaILL"

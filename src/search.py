@@ -185,14 +185,22 @@ def score_item(item, query):
             hit_part = True
             break
 
-    # 词类调整只在"用户没在找这一类"时生效：
-    #   搜「m4a1」→ 命中"消音器"要扣分（用户要枪，不要配件）
-    #   搜「消音器」→ 命中"消音器"不能扣（用户要的就是配件）
+    # 词类调整要看用户的**查询意图**，不能只看命中了什么：
+    #   搜「m4a1」  → 用户要枪，命中"消音器"要扣分
+    #   搜「消音器」→ 用户要配件，命中"消音器"要加分，命中"手枪"要扣分
+    # 之前只判了 wants_weapon，wants_part 算完就扔了（死变量），
+    # 于是搜「消音器」时真消音器反被扣 -10，排第一的成了「消音手枪」
     if wants_weapon:
         # 用户在找武器：命中武器词加分、命中配件词扣分
         if hit_weapon:
             score += SCORE_WEAPON
         elif hit_part:
+            score += SCORE_PART
+    elif wants_part:
+        # 用户在找配件：命中配件词加分、命中武器词扣分
+        if hit_part:
+            score += SCORE_WEAPON
+        elif hit_weapon:
             score += SCORE_PART
     else:
         # 用户没指明武器或配件：命中武器词加分、命中配件词扣分
